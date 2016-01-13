@@ -1,0 +1,11 @@
+william = GATC
+allison = AAAA
+nicole = GGTA
+bob = TTAA
+dave = AGGG
+rob = AATC
+mr_smart = AAAA
+mr_dumb = GGGA
+webb = TTTT
+rocko = ATTA
+mr_sticks = CAGA
