@@ -50,8 +50,6 @@ for line in lines:
 	input_dict[name] = subjectInfo
 
 
-key_list = list(input_dict.keys()) #getting list of 'keys' in dictionary
-
 generation = 0
 while (generation < numGenerations):
 	generation = generation + 1
