@@ -1,5 +1,12 @@
 #This script is an example of how to read a file into a dictionary
 import random
+import os
+
+#dynamic path 
+directoryname = os.path.dirname(os.path.abspath('population.txt'))
+filename = os.path.join(directoryname,'population.txt')
+print filename
+print directoryname
 
 #this function reads in a text file to create an initial population dictionary
 def readPopulation(delineator, input_file_path):
@@ -102,7 +109,7 @@ twoOffSpringFloor = 0.15
 infofromuser = userInput()
 fitnessPreference = infofromuser[0]
 numGenerations = infofromuser[1]
-input_file_path = "/Users/tsacco/pythonwork/genetics/population.txt"
+input_file_path = filename #"/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path)
 input_dict = runGenerations(numGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
