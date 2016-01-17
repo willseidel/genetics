@@ -85,8 +85,8 @@ def fitnessPlot(gen,fit):
 #main code begins here
 
 delineator = '='
-oneOffSpringFloor = 0.15
-twoOffSpringFloor = 0.3
+oneOffSpringFloor = 0.1
+twoOffSpringFloor = 0.15
 fitnessPreference = 'A'
 numGenerations = 25
 input_file_path = "/Users/wseidel/Documents/python/genetics/population.txt"
