@@ -52,12 +52,12 @@ def runGenerations(nGenerations,population,fitnessPreference,oneOffSpringFloor,t
 	generation = 0 									#generation counter
 	genList = [] 									#list of generations for plotting
 	fitnessAvg = []									#declaring list of fitness averages
-	while (generation < numGenerations):
+	while (generation < nGenerations):
 		generation = generation + 1
 		genList.append(generation)
 		fitnessAvg.append(fitnessTrack(population,fitnessPreference))
 		print "generation #:",generation 			#showing current generation info
-		print population
+		#print population
 		print "average fitness:",fitnessAvg[generation-1] #lists are indexed from zero
 		print "***********"
 		population = selectionTimestep(population,generation,oneOffSpringFloor,twoOffSpringFloor)
@@ -82,28 +82,17 @@ def fitnessPlot(gen,fit):
 	plt.axis([0,max(gen)+1,0,1.2])
 	plt.show()	
 
-#This function collects user input for fitnessPreference and numGenerations
-def userInput():
-	fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
-	numGenerations = int(raw_input("how many generations should we have?\n"))
-	print "your fitness preference is:",fitnessPreference
-	print "we'll run for this many generations:",numGenerations
-	fromuser = []
-	fromuser.append(fitnessPreference)
-	fromuser.append(numGenerations)
-	return fromuser
+#This calls for user input for fitness preference and number of generations
+fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
+nGenerations = raw_input("how many generations should we run?\n")
 
 #main code begins here
 
-
 delineator = '='
-oneOffSpringFloor = 0.1
-twoOffSpringFloor = 0.15
-infofromuser = userInput()
-fitnessPreference = infofromuser[0]
-numGenerations = infofromuser[1]
+oneOffSpringFloor = 0.15
+twoOffSpringFloor = 0.3
 input_file_path = "/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path)
-input_dict = runGenerations(numGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
+input_dict = runGenerations(nGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
 
