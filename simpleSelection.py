@@ -57,7 +57,7 @@ def runGenerations(nGenerations,population,fitnessPreference,oneOffSpringFloor,t
 		genList.append(generation)
 		fitnessAvg.append(fitnessTrack(population,fitnessPreference))
 		print "generation #:",generation 			#showing current generation info
-		print population
+		#print population
 		print "average fitness:",fitnessAvg[generation-1] #lists are indexed from zero
 		print "***********"
 		population = selectionTimestep(population,generation,oneOffSpringFloor,twoOffSpringFloor)
