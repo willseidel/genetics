@@ -1,4 +1,5 @@
-#This script is an example of how to read a file into a dictionary
+#!/Users/agray/anaconda/bin/python
+
 import random
 
 #this function reads in a text file to create an initial population dictionary
@@ -93,6 +94,24 @@ def userInput():
 	fromuser.append(numGenerations)
 	return fromuser
 
+#This function estiamtes fitness level
+def fitnessCalc(IdealCandidate,TestCandidate):
+	"""Ideal Candidate is the reference fitness
+	The test candidate is the generation sample. 
+	The fitness is calculated for this candidate 
+	relative to the IdealCandidate
+    """
+	if len(IdealCandidate)!=len(TestCandidate):
+		print 'Your two inputs are strings of different lengths. You may have an error.'
+	print 'Your test candidates are:'
+	print ('Reference Candidate is:' + IdealCandidate)
+	print ('Your Test Candidate is:' + TestCandidate)
+	c=[]
+	for i in xrange(len(IdealCandidate)):
+		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
+	return float(sum(c))/len(c)
+	
+
 #main code begins here
 
 
@@ -106,4 +125,12 @@ input_file_path = "/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path)
 input_dict = runGenerations(numGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
+
+# Example way to calculate fitness using fitnessCalc function above
+a='ATFGJSA'
+b='GNDHJSA'
+c=fitnessCalc(a,b)
+print c
+
+
 
