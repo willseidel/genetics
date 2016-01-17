@@ -90,16 +90,22 @@ def fitnessPlot(gen,fit):
 	plt.axis([0,max(gen)+1,0,1.2])
 	plt.show()	
 
-#This function collects user input for fitnessPreference and numGenerations
+#This function collects user input for fitnessPreference and numGenerations and oneOffSpringFloor and twoOffSpringFloor
 def userInput():
 	fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
 	numGenerations = int(raw_input("how many generations should we have?\n"))
 	fitnessPreference = fitnessPreference[:1].upper() + fitnessPreference[1:]
+	oneOffSpringFloor = float(raw_input("floor for one offpring?\n"))
+	twoOffSpringFloor = float(raw_input("floor for two offpring?\n"))
 	print "your fitness preference is:",fitnessPreference
 	print "we'll run for this many generations:",numGenerations
+	print "one offspring floor is:",oneOffSpringFloor
+	print "two offspring floor is:",twoOffSpringFloor
 	fromuser = []
 	fromuser.append(fitnessPreference)
 	fromuser.append(numGenerations)
+	fromuser.append(oneOffSpringFloor)
+	fromuser.append(twoOffSpringFloor)
 	return fromuser
 
 #This function estiamtes fitness level
@@ -124,11 +130,11 @@ def fitnessCalc(IdealCandidate,TestCandidate):
 
 
 delineator = '='
-oneOffSpringFloor = 0.1
-twoOffSpringFloor = 0.15
 infofromuser = userInput()
 fitnessPreference = infofromuser[0]
 numGenerations = infofromuser[1]
+oneOffSpringFloor = infofromuser[2]
+twoOffSpringFloor = infofromuser[3]
 input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path)
