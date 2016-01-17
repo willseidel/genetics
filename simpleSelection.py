@@ -1,6 +1,13 @@
 #!/Users/agray/anaconda/bin/python
 
 import random
+import os
+
+#dynamic path  
+directoryname = os.path.dirname(os.path.abspath('population.txt'))
+filename = os.path.join(directoryname,'population.txt')
+#print filename
+#print directoryname
 
 #this function reads in a text file to create an initial population dictionary
 def readPopulation(delineator, input_file_path):
@@ -87,6 +94,7 @@ def fitnessPlot(gen,fit):
 def userInput():
 	fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
 	numGenerations = int(raw_input("how many generations should we have?\n"))
+	fitnessPreference = fitnessPreference[:1].upper() + fitnessPreference[1:]
 	print "your fitness preference is:",fitnessPreference
 	print "we'll run for this many generations:",numGenerations
 	fromuser = []
@@ -121,7 +129,7 @@ twoOffSpringFloor = 0.15
 infofromuser = userInput()
 fitnessPreference = infofromuser[0]
 numGenerations = infofromuser[1]
-input_file_path = "/Users/tsacco/pythonwork/genetics/population.txt"
+input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path)
 input_dict = runGenerations(numGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
