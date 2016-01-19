@@ -1,6 +1,8 @@
-#This script is an example of how to read a file into a dictionary
+#!/Users/agray/anaconda/bin/python
+
 import random
 import math
+import os
 
 #this function takes a population, pairs off members, mates them, returns a random number of offspring\
 #who either live or die based on their fitness level. The function then returns a population of surviving offspring.
