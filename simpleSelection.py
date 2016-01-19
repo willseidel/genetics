@@ -31,6 +31,7 @@ def fitnessCalc(gCode,fitPref):
 	fitC = float(gCode.count(fitPref))/len(gCode)
 	return fitC
 
+
 #this function reads in a text file to create an initial population dictionary
 def readPopulation(delineator, input_file_path,fPreference):
 
@@ -152,7 +153,8 @@ fitnessPreference = raw_input('fitness preference?\n')
 delineator = '='
 survivalThreshold = 0.2
 numberChildren = 5
-input_file_path = "/Users/wseidel/Documents/python/genetics/population.txt"
+
+input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
 input_dict = readPopulation(delineator, input_file_path,fitnessPreference)
 input_dict = runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
@@ -161,9 +163,4 @@ print input_dict
 
 
 
-# Example way to calculate fitness using fitnessCalc function above
-#a='ATFGJSA'
-#b='GNDHJSA'
-#c=fitnessCalcRelative(a,b)
-#print c
 
