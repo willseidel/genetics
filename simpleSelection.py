@@ -86,6 +86,7 @@ def runGenerations(numGenerations,population,fitnessPreference,survivalMin,nKids
 		fitnessAvg.append(fitnessTrack(population,fitnessPreference))
 		print "generation #:",generation,"numGenerations",numGenerations			#showing current generation info
 		print "population",len(population)
+		print "generation #:",generation 			#showing current generation info
 		print "average fitness:",fitnessAvg[generation-1] #lists are indexed from zero
 		print "***********"
 		population = sexualReproduction(population,survivalMin,nKids,fitnessPreference,generation)
@@ -110,7 +111,42 @@ def fitnessPlot(gen,fit):
 	plt.axis([0,max(gen)+1,0,1.2])
 	plt.show()	
 
+#This function collects user input for fitnessPreference and numGenerations
+def userInput():
+	fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
+	numGenerations = int(raw_input("how many generations should we have?\n"))
+	fitnessPreference = fitnessPreference[:1].upper() + fitnessPreference[1:]
+	print "your fitness preference is:",fitnessPreference
+	print "we'll run for this many generations:",numGenerations
+	fromuser = []
+	fromuser.append(fitnessPreference)
+	fromuser.append(numGenerations)
+	return fromuser
+
+#This function estiamtes fitness level
+def fitnessCalcRelative(IdealCandidate,TestCandidate):
+	"""Ideal Candidate is the reference fitness
+	The test candidate is the generation sample. 
+	The fitness is calculated for this candidate 
+	relative to the IdealCandidate
+    """
+	if len(IdealCandidate)!=len(TestCandidate):
+		print 'Your two inputs are strings of different lengths. You may have an error.'
+	print 'Your test candidates are:'
+	print ('Reference Candidate is:' + IdealCandidate)
+	print ('Your Test Candidate is:' + TestCandidate)
+	c=[]
+	for i in xrange(len(IdealCandidate)):
+		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
+	return float(sum(c))/len(c)
+	
+
 #main code begins here
+#dynamic path  
+directoryname = os.path.dirname(os.path.abspath('population.txt'))
+filename = os.path.join(directoryname,'population.txt')
+input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
+
 nGenerations = int(raw_input('number of generations?\n'))
 fitnessPreference = raw_input('fitness preference?\n')
 delineator = '='
@@ -121,3 +157,13 @@ input_file_path = "/Users/wseidel/Documents/python/genetics/population.txt"
 input_dict = readPopulation(delineator, input_file_path,fitnessPreference)
 input_dict = runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
 print input_dict
+
+
+
+
+# Example way to calculate fitness using fitnessCalc function above
+#a='ATFGJSA'
+#b='GNDHJSA'
+#c=fitnessCalcRelative(a,b)
+#print c
+
