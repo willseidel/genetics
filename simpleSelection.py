@@ -1,16 +1,39 @@
 #!/Users/agray/anaconda/bin/python
 
 import random
+import math
 import os
 
-#dynamic path  
-directoryname = os.path.dirname(os.path.abspath('population.txt'))
-filename = os.path.join(directoryname,'population.txt')
-#print filename
-#print directoryname
+#this function takes a population, pairs off members, mates them, returns a random number of offspring\
+#who either live or die based on their fitness level. The function then returns a population of surviving offspring.
+def sexualReproduction(population,survivalM,nChildren,fitnessPref,genNumber):
+	nPairs = int(round(len(population)/2,2)) #number of pairs
+	pairCounter = 1
+	children = {}	#initiliazing dictionary of children
+	while pairCounter < nPairs+1:
+		parents 		= random.sample(population,2)
+		firstParent 	= parents[0]
+		secondParent 	= parents[1]
+		chCounter 		= 1
+		while chCounter < nChildren+1:
+			childTemp = parentMixer(population,firstParent,secondParent,fitnessPref)
+			if random.random()*childTemp[2] > survivalM: #if the product of the child's fitness and a random number exceeds survival threshold
+				children[childTemp[0]+"_gen:"+str(genNumber)+"_child:"+str(chCounter)] = [childTemp[1],childTemp[2]] #then we assign the child to the population
+			chCounter = chCounter + 1
+		del population[firstParent]
+		del population[secondParent]
+		pairCounter = pairCounter + 1
+
+	return children
+
+#this function takes a name and a genetic code and makes a new population member
+def fitnessCalc(gCode,fitPref):
+	fitC = float(gCode.count(fitPref))/len(gCode)
+	return fitC
+
 
 #this function reads in a text file to create an initial population dictionary
-def readPopulation(delineator, input_file_path):
+def readPopulation(delineator, input_file_path,fPreference):
 
 	input_dict = {} 						#making new dictionary for input file
 	input_file = open(input_file_path)		#reading input file
@@ -22,41 +45,39 @@ def readPopulation(delineator, input_file_path):
 		name = name.strip() 				#stripping white space
 		genSeq = details[1] 				#reading genetic sequence
 		genSeq = genSeq.strip() 			#stripping genetic sequence whitespace
-		subjectInfo = [details[1],float(genSeq.count(fitnessPreference))/len(genSeq)]#\
+		subjectInfo = [genSeq,float(genSeq.count(fPreference))/len(genSeq)]#\
 		#calculating % of desired trait and assigning to subject data
 		input_dict[name] = subjectInfo 		#assigning subject data to dictionary entry
 
 	return input_dict
 
-#This function takes as input a population dictionary and a member of that population \
-#along with that member's generation and fecundity values. It adds copies of the member \
-#with the name modified to reflect the generation and fecundity of the copy.
-def asexual(dictionary,target,generation,fecundity):
-	speciesnumber=1
-	while speciesnumber<fecundity+1:
-		newspecies=target+str(generation)+str(speciesnumber)
-		speciesnumber=speciesnumber+1
-		dictionary[newspecies] = dictionary[target]
-	return dictionary
+def parentMixer(population,parent1,parent2,fPref):
 
-#This function calculates the product of each entry in the dictionary's % of desired traits \
-#multiplied by a random value between 0 and 1. That value is then mapped to fecundity based\
-#on user-specified floors.
-def selectionTimestep(population,gen,oneFloor,twoFloor):
-	
-	for key, subjectInfo in population.items():
-		subjectInfo = population[key] 				#getting subject info
-		fitness = subjectInfo[1]*random.random() 	#assigning fitness with random
-		if fitness > twoFloor:
-			population = asexual(population,key,gen,2)
-		if fitness > oneFloor and fitness < twoFloor:
-			population = asexual(population,key,gen,1)
-		del population[key] 						#killing last generation's people
+	combinedGenes = '' #declaring list that will hold genetic code
+	i = 0 #index counter
+	for c in population[parent1][0]:
+		if random.random()>0.5: #50/50 shot for each parent at passing on code entry
+			combinedGenes += population[parent1][0][i]
+		else:
+			combinedGenes += population[parent2][0][i]
+		i = i+1
 
-	return population
+	parent1stripped = ''.join([j for j in parent1 if not j.isdigit()]) #stripping digits from names
+	parent2stripped = ''.join([j for j in parent2 if not j.isdigit()])
+
+	childName 	= parent1stripped[:3] + parent2stripped[:3]
+	childFit 	= fitnessCalc(combinedGenes,fPref)
+
+	child = []
+	child.append(childName)
+	child.append(combinedGenes)
+	child.append(childFit)
+	return child
+
 
 #This function calls selectionTimestep to simulate a user-specified number of generations.
-def runGenerations(nGenerations,population,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor):
+def runGenerations(numGenerations,population,fitnessPreference,survivalMin,nKids):
+	
 	generation = 0 									#generation counter
 	genList = [] 									#list of generations for plotting
 	fitnessAvg = []									#declaring list of fitness averages
@@ -64,11 +85,12 @@ def runGenerations(nGenerations,population,fitnessPreference,oneOffSpringFloor,t
 		generation = generation + 1
 		genList.append(generation)
 		fitnessAvg.append(fitnessTrack(population,fitnessPreference))
+		print "generation #:",generation,"numGenerations",numGenerations			#showing current generation info
+		print "population",len(population)
 		print "generation #:",generation 			#showing current generation info
-		#print population
 		print "average fitness:",fitnessAvg[generation-1] #lists are indexed from zero
 		print "***********"
-		population = selectionTimestep(population,generation,oneOffSpringFloor,twoOffSpringFloor)
+		population = sexualReproduction(population,survivalMin,nKids,fitnessPreference,generation)
 
 	null = fitnessPlot(genList,fitnessAvg)
 	return population
@@ -103,7 +125,7 @@ def userInput():
 	return fromuser
 
 #This function estiamtes fitness level
-def fitnessCalc(IdealCandidate,TestCandidate):
+def fitnessCalcRelative(IdealCandidate,TestCandidate):
 	"""Ideal Candidate is the reference fitness
 	The test candidate is the generation sample. 
 	The fitness is calculated for this candidate 
@@ -121,24 +143,24 @@ def fitnessCalc(IdealCandidate,TestCandidate):
 	
 
 #main code begins here
-
-
-delineator = '='
-oneOffSpringFloor = 0.1
-twoOffSpringFloor = 0.15
-infofromuser = userInput()
-fitnessPreference = infofromuser[0]
-numGenerations = infofromuser[1]
+#dynamic path  
+directoryname = os.path.dirname(os.path.abspath('population.txt'))
+filename = os.path.join(directoryname,'population.txt')
 input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
-input_dict = readPopulation(delineator, input_file_path)
-input_dict = runGenerations(numGenerations,input_dict,fitnessPreference,oneOffSpringFloor,twoOffSpringFloor)
+nGenerations = int(raw_input('number of generations?\n'))
+fitnessPreference = raw_input('fitness preference?\n')
+delineator = '='
+survivalThreshold = 0.2
+numberChildren = 5
 
-# Example way to calculate fitness using fitnessCalc function above
-a='ATFGJSA'
-b='GNDHJSA'
-c=fitnessCalc(a,b)
-print c
+input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
+
+input_dict = readPopulation(delineator, input_file_path,fitnessPreference)
+input_dict = runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
+print input_dict
+
+
 
 
 
