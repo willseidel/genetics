@@ -144,20 +144,25 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 
 #main code begins here
 #dynamic path  
-directoryname = os.path.dirname(os.path.abspath('population.txt'))
-filename = os.path.join(directoryname,'population.txt')
-input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
+directoryname 		= os.path.dirname(os.path.abspath('population.txt'))
+filename 			= os.path.join(directoryname,'population.txt')
+populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
-nGenerations = int(raw_input('number of generations?\n'))
-fitnessPreference = raw_input('fitness preference?\n')
-delineator = '='
-survivalThreshold = 0.2
-numberChildren = 5
 
-input_file_path = filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
+#nGenerations = int(raw_input('number of generations?\n'))
+#fitnessPreference = raw_input('fitness preference?\n')
+userResponse 		= userInput()
+fitnessPreference 	= userResponse[0]
+nGenerations 		= userResponse[1]
 
-input_dict = readPopulation(delineator, input_file_path,fitnessPreference)
-input_dict = runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
+delineator 			= '='
+survivalThreshold 	= 0.2
+numberChildren 		= 10
+
+populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
+
+input_dict 			= readPopulation(delineator,populationFilepath,fitnessPreference)
+input_dict 			= runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
 print input_dict
 
 
