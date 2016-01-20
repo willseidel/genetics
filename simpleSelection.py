@@ -45,7 +45,8 @@ def readPopulation(delineator, input_file_path,fPreference):
 		name = name.strip() 				#stripping white space
 		genSeq = details[1] 				#reading genetic sequence
 		genSeq = genSeq.strip() 			#stripping genetic sequence whitespace
-		subjectInfo = [genSeq,float(genSeq.count(fPreference))/len(genSeq)]#\
+		subjectInfo = [genSeq,fitnessCalcRelative(fPreference,genSeq)]#\
+						
 		#calculating % of desired trait and assigning to subject data
 		input_dict[name] = subjectInfo 		#assigning subject data to dictionary entry
 
@@ -66,7 +67,7 @@ def parentMixer(population,parent1,parent2,fPref):
 	parent2stripped = ''.join([j for j in parent2 if not j.isdigit()])
 
 	childName 	= parent1stripped[:3] + parent2stripped[:3]
-	childFit 	= fitnessCalc(combinedGenes,fPref)
+	childFit	= fitnessCalcRelative(combinedGenes,fPref)
 
 	child = []
 	child.append(childName)
@@ -84,7 +85,7 @@ def runGenerations(numGenerations,population,fitnessPreference,survivalMin,nKids
 	while (generation < numGenerations):
 		generation = generation + 1
 		genList.append(generation)
-		fitnessAvg.append(fitnessTrack(population,fitnessPreference))
+		fitnessAvg.append(fitnessTrack(population))
 		print "generation #:",generation,"numGenerations",numGenerations			#showing current generation info
 		print "population",len(population)
 		print "generation #:",generation 			#showing current generation info
@@ -96,7 +97,7 @@ def runGenerations(numGenerations,population,fitnessPreference,survivalMin,nKids
 	return population
 
 #This function calculates the average proportion of desired traits in a population
-def fitnessTrack(population,fitnessPreference):	
+def fitnessTrack(population):	
 	total = 0
 	for key in population:
 		total = total + population[key][1]
@@ -114,7 +115,7 @@ def fitnessPlot(gen,fit):
 
 #This function collects user input for fitnessPreference and numGenerations
 def userInput():
-	fitnessPreference = raw_input("what nucleotide should we select for (A, C, T or G)?\n")
+	fitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
 	numGenerations = int(raw_input("how many generations should we have?\n"))
 	fitnessPreference = fitnessPreference[:1].upper() + fitnessPreference[1:]
 	print "your fitness preference is:",fitnessPreference
@@ -133,9 +134,6 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
     """
 	if len(IdealCandidate)!=len(TestCandidate):
 		print 'Your two inputs are strings of different lengths. You may have an error.'
-	print 'Your test candidates are:'
-	print ('Reference Candidate is:' + IdealCandidate)
-	print ('Your Test Candidate is:' + TestCandidate)
 	c=[]
 	for i in xrange(len(IdealCandidate)):
 		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
