@@ -6,7 +6,7 @@ import os
 
 #this function takes a population, pairs off members, mates them, returns a random number of offspring\
 #who either live or die based on their fitness level. The function then returns a population of surviving offspring.
-def sexualReproduction(population,survivalM,nChildren,fitnessPref,genNumber):
+def sexualReproduction(population,SurvivalMin,nChildren,FitnessPreference,GenNumber,MutationProbability):
 	nPairs = int(round(len(population)/2,2)) #number of pairs
 	pairCounter = 1
 	children = {}	#initiliazing dictionary of children
@@ -16,9 +16,9 @@ def sexualReproduction(population,survivalM,nChildren,fitnessPref,genNumber):
 		secondParent 	= parents[1]
 		chCounter 		= 1
 		while chCounter < nChildren+1:
-			childTemp = parentMixer(population,firstParent,secondParent,fitnessPref)
-			if random.random()*childTemp[2] > survivalM: #if the product of the child's fitness and a random number exceeds survival threshold
-				children[childTemp[0]+"_gen:"+str(genNumber)+"_child:"+str(chCounter)] = [childTemp[1],childTemp[2]] #then we assign the child to the population
+			childTemp = parentMixer(population,firstParent,secondParent,FitnessPreference,MutationProbability)
+			if random.random()*childTemp[2] > SurvivalMin: #if the product of the child's fitness and a random number exceeds survival threshold
+				children[childTemp[0]+"_gen:"+str(GenNumber)+"_child:"+str(chCounter)] = [childTemp[1],childTemp[2]] #then we assign the child to the population
 			chCounter = chCounter + 1
 		del population[firstParent]
 		del population[secondParent]
@@ -26,18 +26,12 @@ def sexualReproduction(population,survivalM,nChildren,fitnessPref,genNumber):
 
 	return children
 
-#this function takes a name and a genetic code and makes a new population member
-def fitnessCalc(gCode,fitPref):
-	fitC = float(gCode.count(fitPref))/len(gCode)
-	return fitC
-
-
 #this function reads in a text file to create an initial population dictionary
-def readPopulation(delineator, input_file_path,fPreference):
+def readPopulation(delineator,InputFilePath,FitnessPreference):
 
-	input_dict = {} 						#making new dictionary for input file
-	input_file = open(input_file_path)		#reading input file
-	lines = input_file.readlines() 			#reading input file lines
+	population = {} 						#making new dictionary for input file
+	InputFile = open(InputFilePath)		#reading input file
+	lines = InputFile.readlines() 			#reading input file lines
 
 	for line in lines:
 		details = line.split("=")
@@ -45,29 +39,47 @@ def readPopulation(delineator, input_file_path,fPreference):
 		name = name.strip() 				#stripping white space
 		genSeq = details[1] 				#reading genetic sequence
 		genSeq = genSeq.strip() 			#stripping genetic sequence whitespace
-		subjectInfo = [genSeq,fitnessCalcRelative(fPreference,genSeq)]#\
+		subjectInfo = [genSeq,fitnessCalcRelative(FitnessPreference,genSeq)]#\
 						
 		#calculating % of desired trait and assigning to subject data
-		input_dict[name] = subjectInfo 		#assigning subject data to dictionary entry
+		population[name] = subjectInfo 		#assigning subject data to dictionary entry
 
-	return input_dict
+	return population
 
-def parentMixer(population,parent1,parent2,fPref):
+def parentMixer(population,parent1,parent2,FitnessPreference,MutationProbability):
+
+	"""We iterate through the genome and at
+	each entry we either mutate and chose
+	randomly between G,A,T or C, or we chose
+	between the source genes of the parents"""
 
 	combinedGenes = '' #declaring list that will hold genetic code
 	i = 0 #index counter
 	for c in population[parent1][0]:
-		if random.random()>0.5: #50/50 shot for each parent at passing on code entry
-			combinedGenes += population[parent1][0][i]
+		if random.random()>(1-MutationProbability): 
+			MutationPicker = random.random()  
+			if MutationPicker <=0.25:
+				combinedGenes += "G"
+			if MutationPicker >0.25 and MutationPicker<=0.5:
+				combinedGenes += "A"
+			if MutationPicker >0.5 and MutationPicker<=0.75:
+				combinedGenes += "T"
+			if MutationPicker >0.75:
+			 	combinedGenes += "C"
 		else:
-			combinedGenes += population[parent2][0][i]
+			if random.random()>0.5: #50/50 shot for each parent at passing on code entry
+				combinedGenes += population[parent1][0][i]
+			else:
+				combinedGenes += population[parent2][0][i]
+
+
 		i = i+1
 
 	parent1stripped = ''.join([j for j in parent1 if not j.isdigit()]) #stripping digits from names
 	parent2stripped = ''.join([j for j in parent2 if not j.isdigit()])
 
 	childName 	= parent1stripped[:3] + parent2stripped[:3]
-	childFit	= fitnessCalcRelative(combinedGenes,fPref)
+	childFit	= fitnessCalcRelative(combinedGenes,FitnessPreference)
 
 	child = []
 	child.append(childName)
@@ -77,21 +89,21 @@ def parentMixer(population,parent1,parent2,fPref):
 
 
 #This function calls selectionTimestep to simulate a user-specified number of generations.
-def runGenerations(numGenerations,population,fitnessPreference,survivalMin,nKids):
+def runGenerations(nGenerations,population,FitnessPreference,SurvivalMin,nChildren,MutationProbability):
 	
 	generation = 0 									#generation counter
 	genList = [] 									#list of generations for plotting
 	fitnessAvg = []									#declaring list of fitness averages
-	while (generation < numGenerations):
+	while (generation < nGenerations):
 		generation = generation + 1
 		genList.append(generation)
 		fitnessAvg.append(fitnessTrack(population))
-		print "generation #:",generation,"numGenerations",numGenerations			#showing current generation info
+		print "generation #:",generation,"nGenerations",nGenerations			#showing current generation info
 		print "population",len(population)
 		print "generation #:",generation 			#showing current generation info
 		print "average fitness:",fitnessAvg[generation-1] #lists are indexed from zero
 		print "***********"
-		population = sexualReproduction(population,survivalMin,nKids,fitnessPreference,generation)
+		population = sexualReproduction(population,SurvivalMin,nChildren,FitnessPreference,generation,MutationProbability)
 
 	null = fitnessPlot(genList,fitnessAvg)
 	return population
@@ -104,24 +116,24 @@ def fitnessTrack(population):
 	return total/len(population)		
 
 #This function plots two vectors against eachother
-def fitnessPlot(gen,fit):
+def fitnessPlot(generation,fit):
 	import matplotlib.pyplot as plt
 
-	plt.plot(gen,fit)
+	plt.plot(generation,fit)
 	plt.ylabel('fitness [-]')
 	plt.xlabel('generation [-]')
-	plt.axis([0,max(gen)+1,0,1.2])
+	plt.axis([0,max(generation)+1,0,1.2])
 	plt.show()	
 
-#This function collects user input for fitnessPreference and numGenerations
+#This function collects user input for FitnessPreference and numGenerations
 def userInput():
-	fitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
+	FitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
 	numGenerations = int(raw_input("how many generations should we have?\n"))
-	fitnessPreference = fitnessPreference[:1].upper() + fitnessPreference[1:]
-	print "your fitness preference is:",fitnessPreference
+	FitnessPreference = FitnessPreference[:1].upper() + FitnessPreference[1:]
+	print "your fitness preference is:",FitnessPreference
 	print "we'll run for this many generations:",numGenerations
 	fromuser = []
-	fromuser.append(fitnessPreference)
+	fromuser.append(FitnessPreference)
 	fromuser.append(numGenerations)
 	return fromuser
 
@@ -131,7 +143,7 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 	The test candidate is the generation sample. 
 	The fitness is calculated for this candidate 
 	relative to the IdealCandidate
-    """
+ 	"""
 	if len(IdealCandidate)!=len(TestCandidate):
 		print 'Your two inputs are strings of different lengths. You may have an error.'
 	c=[]
@@ -148,22 +160,18 @@ populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/populati
 
 
 #nGenerations = int(raw_input('number of generations?\n'))
-#fitnessPreference = raw_input('fitness preference?\n')
+#FitnessPreference = raw_input('fitness preference?\n')
 userResponse 		= userInput()
-fitnessPreference 	= userResponse[0]
+FitnessPreference 	= userResponse[0]
 nGenerations 		= userResponse[1]
 
 delineator 			= '='
 survivalThreshold 	= 0.2
-numberChildren 		= 10
+nChildren 			= 10
+MutationProbability = 0.001
 
 populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
-input_dict 			= readPopulation(delineator,populationFilepath,fitnessPreference)
-input_dict 			= runGenerations(nGenerations,input_dict,fitnessPreference,survivalThreshold,numberChildren)
-print input_dict
-
-
-
-
-
+population 			= readPopulation(delineator,populationFilepath,FitnessPreference)
+population 			= runGenerations(nGenerations,population,FitnessPreference,survivalThreshold,nChildren,MutationProbability)
+print population
