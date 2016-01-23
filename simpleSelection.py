@@ -128,8 +128,13 @@ def fitnessPlot(generation,fit):
 #This function collects user input for fitnessPreference and numGenerations
 def userInput():
 	FitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
+	FitnessPreference = FitnessPreference.strip() #strips whitespace from sequence
+	FitnessPreference = FitnessPreference.upper() #uppercases the sequence	
+	FitnessPreference = FitnessPreference.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
+	FitnessPreference = FitnessPreference[:8] #truncates sequence to first 8 letters
+	#FitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
 	numGenerations = int(raw_input("how many generations should we have?\n"))
-	FitnessPreference = FitnessPreference[:1].upper() + FitnessPreference[1:]
+	#FitnessPreference = FitnessPreference[:1].upper() + FitnessPreference[1:]
 	print "your fitness preference is:",FitnessPreference
 	print "we'll run for this many generations:",numGenerations
 	fromuser = []
@@ -153,7 +158,7 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 	
 #this function reads in a starting sequence of nucleotides from the user
 def userInputsequence():
-	initialSequence = raw_input("enter an initial 8 letter nucleotide sequence\n")
+	initialSequence = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
 	initialSequence = initialSequence.strip() #strips whitespace from sequence
 	initialSequence = initialSequence.upper() #uppercases the sequence	
 	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
