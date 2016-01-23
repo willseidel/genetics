@@ -125,11 +125,19 @@ def fitnessCalc(IdealCandidate,TestCandidate):
 		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
 	return float(sum(c))/len(c)
 	
+#this function reads in a starting sequence of nucleotides from the user
+def userInputsequence():
+	initialSequence = raw_input("enter an initial 8 letter nucleotide sequence\n")
+	initialSequence = initialSequence.strip() #strips whitespace from sequence
+	initialSequence = initialSequence.upper() #uppercases the sequence	
+	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ') #removes other letters
+	initialSequence = initialSequence[:8] #truncates sequence to first 8 letters
+	print ('your initial sequence is:' + initialSequence)
 
 #main code begins here
 
-
 delineator = '='
+startsequence = userInputsequence()
 infofromuser = userInput()
 fitnessPreference = infofromuser[0]
 numGenerations = infofromuser[1]
