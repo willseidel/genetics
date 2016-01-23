@@ -1,0 +1,10 @@
+alpha = AAAAAAAC
+beta = CCCCCCCT
+gamma = GGGGGGGA
+delta = TTTTTTTG
+epsilon = ACTGACTG
+mu = CGCGCGCG
+psi = ATATATAT
+omega = CATCATGG
+zeta = GATCGATC
+sigma = GCTACAAT

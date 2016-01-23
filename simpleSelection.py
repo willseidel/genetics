@@ -156,7 +156,7 @@ def userInputsequence():
 	initialSequence = raw_input("enter an initial 8 letter nucleotide sequence\n")
 	initialSequence = initialSequence.strip() #strips whitespace from sequence
 	initialSequence = initialSequence.upper() #uppercases the sequence	
-	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ') #removes other letters
+	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
 	initialSequence = initialSequence[:8] #truncates sequence to first 8 letters
 	print ('your initial sequence is:' + initialSequence)
 
