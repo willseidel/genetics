@@ -119,8 +119,8 @@ def fitnessTrack(population):
 #This function plots two vectors against eachother
 def fitnessPlot(generation,fit):
 	import matplotlib.pyplot as plt
-	plt.rcParams['axes.color_cycle']='#ff00ab'
-	plt.rcParams['lines.linewidth'] = 40.0
+	plt.rcParams['axes.color_cycle']='#ff00ab' #line color
+	plt.rcParams['lines.linewidth'] = 40.0 #line width
 	plt.plot(generation,fit)
 	plt.ylabel('fitness [-]')
 	plt.xlabel('generation [-]')
