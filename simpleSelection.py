@@ -3,6 +3,7 @@
 import random
 import math
 import os
+import string
 
 #this function takes a population, pairs off members, mates them, returns a random number of offspring\
 #who either live or die based on their fitness level. The function then returns a population of surviving offspring.
@@ -127,8 +128,9 @@ def fitnessPlot(generation,fit):
 
 #This function collects user input for fitnessPreference and numGenerations
 def userInput():
+	from string import whitespace
 	FitnessPreference = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
-	FitnessPreference = FitnessPreference.strip() #strips whitespace from sequence
+	FitnessPreference = FitnessPreference.translate(None, whitespace) #strips whitespace from sequence
 	FitnessPreference = FitnessPreference.upper() #uppercases the sequence	
 	FitnessPreference = FitnessPreference.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
 	FitnessPreference = FitnessPreference[:8] #truncates sequence to first 8 letters
@@ -155,15 +157,7 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 	for i in xrange(len(IdealCandidate)):
 		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
 	return float(sum(c))/len(c)
-	
-#this function reads in a starting sequence of nucleotides from the user
-def userInputsequence():
-	initialSequence = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
-	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
-	initialSequence = initialSequence.replace(' ','') #deletes ALL spaces from sequence
-	initialSequence = initialSequence[:8] #truncates sequence to first 8 letters
-	initialSequence = initialSequence.upper() #uppercases the sequence	
-	print ('your initial sequence is:' + initialSequence)
+
 
 #main code begins here
 #dynamic path  
