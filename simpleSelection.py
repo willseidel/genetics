@@ -159,10 +159,10 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 #this function reads in a starting sequence of nucleotides from the user
 def userInputsequence():
 	initialSequence = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
-	initialSequence = initialSequence.strip() #strips whitespace from sequence
-	initialSequence = initialSequence.upper() #uppercases the sequence	
 	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
+	initialSequence = initialSequence.strip() #strips whitespace from sequence
 	initialSequence = initialSequence[:8] #truncates sequence to first 8 letters
+	initialSequence = initialSequence.upper() #uppercases the sequence	
 	print ('your initial sequence is:' + initialSequence)
 
 #main code begins here
