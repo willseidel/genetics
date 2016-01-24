@@ -160,7 +160,7 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
 def userInputsequence():
 	initialSequence = raw_input("What genetic sequence represents ideal fitness? (combination of A, C, T or G)?\n")
 	initialSequence = initialSequence.translate(None, '0123456789BDEFHIJKLMNOPQRSUVWXYZ!@#$%^&*()-_+=~`{[}]|\:;"<,>.?/') #removes non-ACTG characters
-	initialSequence = initialSequence.strip() #strips whitespace from sequence
+	initialSequence = initialSequence.replace(' ','') #deletes ALL spaces from sequence
 	initialSequence = initialSequence[:8] #truncates sequence to first 8 letters
 	initialSequence = initialSequence.upper() #uppercases the sequence	
 	print ('your initial sequence is:' + initialSequence)
