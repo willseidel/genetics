@@ -119,12 +119,23 @@ def fitnessTrack(population):
 #This function plots two vectors against eachother
 def fitnessPlot(generation,fit):
 	import matplotlib.pyplot as plt
-	plt.rcParams['axes.color_cycle']='#ff00ab' #line color
-	plt.rcParams['lines.linewidth'] = 40.0 #line width
-	plt.plot(generation,fit)
+	import numpy as np
+	plt.rcParams['axes.color_cycle'] = ['b', 'grey', '#ff00ab'] #line color cycle
+	plt.rcParams['lines.linewidth'] = 20.0 #line width
+	plt.plot(generation,fit, ':') # third term ':' sets dots '--' for dashes
+	plt.plot(generation,fit,'--') #testing a second plot
 	plt.ylabel('fitness [-]')
 	plt.xlabel('generation [-]')
-	plt.axis([0,max(generation)+1,0,1.2])
+	plt.grid(True) #add a grid
+	plt.text(1, 1.2, 'The Champ Was Here') #puts text on graph at selected coordinates
+	plt.fill(generation, fit, 'g') #fill the space with color
+	plt.axis([0,max(generation)+1,0,1.5])
+	plt.show()
+	#Playing around with scatter plotting and varying color of points
+	t = np.linspace(0, 2 * np.pi, 25) #creates a set of 25 numbers between 0 and 2*pi
+	x = np.sin(t)
+	y = np.cos(t)
+	plt.scatter(t,x,c=y) #cmap='viridis' could be added to specify a colormap
 	plt.show()	
 
 #This function collects user input for fitnessPreference and numGenerations
@@ -166,12 +177,9 @@ directoryname 		= os.path.dirname(os.path.abspath('population.txt'))
 filename 			= os.path.join(directoryname,'population.txt')
 populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/population.txt"
 
-#nGenerations = int(raw_input('number of generations?\n'))
-#FitnessPreference = raw_input('fitness preference?\n')
 userResponse 		= userInput()
 FitnessPreference 	= userResponse[0]
 nGenerations 		= userResponse[1]
-#startsequence = userInputsequence()
 delineator 			= '='
 survivalThreshold 	= 0.2
 nChildren 			= 10
