@@ -158,7 +158,7 @@ def userInput():
 	fromuser.append(numGenerations)
 	return fromuser
 
-#This function estiamtes fitness level
+#This function estimates fitness level
 def fitnessCalcRelative(IdealCandidate,TestCandidate):
 	"""Ideal Candidate is the reference fitness
 	The test candidate is the generation sample. 
@@ -193,7 +193,6 @@ population 			= readPopulation(delineator,populationFilepath,FitnessPreference)
 population 			= runGenerations(nGenerations,population,FitnessPreference,survivalThreshold,nChildren,MutationProbability)
 print population
 page 				= requests.get('http://results.tfmeetpro.com/Athletic_Timing/TrackTown_USA_High_Performance_Meet_2/results_28.html')
-tree 				= html.fromstring(page.content)
 runners = tree.xpath('//td[@class="athlete"]/text()')
 times = tree.xpath('//td[@class="time"]/text()')
 print 'Runners: ', runners
