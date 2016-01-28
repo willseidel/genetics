@@ -156,13 +156,9 @@ def userInput():
 	fromuser.append(numGenerations)
 	return fromuser
 
-<<<<<<< HEAD
 #This function estiamtes fitness level
 def fitnessCalcRelative(TestCandidate,IdealCandidate):
-=======
-#This function estimates fitness level
-def fitnessCalcRelative(IdealCandidate,TestCandidate):
->>>>>>> origin/master
+
 	"""Ideal Candidate is the reference fitness
 	The test candidate is the generation sample. 
 	The fitness is calculated for this candidate 
