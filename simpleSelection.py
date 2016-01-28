@@ -4,6 +4,8 @@ import random
 import math
 import os
 import string
+from lxml import html
+import requests
 
 #this function takes a population, pairs off members, mates them, returns a random number of offspring\
 #who either live or die based on their fitness level. The function then returns a population of surviving offspring.
@@ -190,3 +192,9 @@ populationFilepath 	= filename # was "/Users/tsacco/pythonwork/genetics/populati
 population 			= readPopulation(delineator,populationFilepath,FitnessPreference)
 population 			= runGenerations(nGenerations,population,FitnessPreference,survivalThreshold,nChildren,MutationProbability)
 print population
+page 				= requests.get('http://results.tfmeetpro.com/Athletic_Timing/TrackTown_USA_High_Performance_Meet_2/results_28.html')
+tree 				= html.fromstring(page.content)
+runners = tree.xpath('//td[@class="athlete"]/text()')
+times = tree.xpath('//td[@class="time"]/text()')
+print 'Runners: ', runners
+print 'Times: ', times 
