@@ -6,6 +6,6 @@
  rob = AATCAAGG
  mr_smart = AAAAAAAA
  mr_dumb = GGGATTTT
- webb = TTTTAATTA
+ webb = TTTTAATT
  rocko = ATTAATGA
  mr_sticks = CAGACAAA

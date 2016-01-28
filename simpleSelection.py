@@ -159,7 +159,7 @@ def userInput():
 	return fromuser
 
 #This function estiamtes fitness level
-def fitnessCalcRelative(IdealCandidate,TestCandidate):
+def fitnessCalcRelative(TestCandidate,IdealCandidate):
 	"""Ideal Candidate is the reference fitness
 	The test candidate is the generation sample. 
 	The fitness is calculated for this candidate 
@@ -167,6 +167,9 @@ def fitnessCalcRelative(IdealCandidate,TestCandidate):
  	"""
 	if len(IdealCandidate)!=len(TestCandidate):
 		print 'Your two inputs are strings of different lengths. You may have an error.'
+		print "idealcandidate:",IdealCandidate
+		print "testcandidate:",TestCandidate
+
 	c=[]
 	for i in xrange(len(IdealCandidate)):
 		c.append(IdealCandidate[i]==TestCandidate[i]) #when characters match c is true == 1 when they are false c is false == 0
@@ -194,7 +197,7 @@ population 			= runGenerations(nGenerations,population,FitnessPreference,surviva
 print population
 page 				= requests.get('http://results.tfmeetpro.com/Athletic_Timing/TrackTown_USA_High_Performance_Meet_2/results_28.html')
 tree 				= html.fromstring(page.content)
-runners = tree.xpath('//td[@class="athlete"]/text()')
-times = tree.xpath('//td[@class="time"]/text()')
+runners 			= tree.xpath('//td[@class="_new"]/text()')
+times 				= tree.xpath('//td[@class="time"]/text()')
 print 'Runners: ', runners
 print 'Times: ', times 
